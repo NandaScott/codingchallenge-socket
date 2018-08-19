@@ -3,13 +3,7 @@ const router = express.Router();
 const axios = require('axios');
 
 router.get('/', (req, res) => {
-    axios.get('http://localhost:8000/factory')
-        .then((response) => {
-            res.send({response: 'I am alive.'}).status(200);
-        })
-        .catch((error) => {
-            res.send(error.response.message);
-        });
+    res.send({message: "I am alive"}).status(200);
 });
 
 module.exports = router;
