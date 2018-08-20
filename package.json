@@ -21,11 +21,12 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
-    "nodemon": "^1.17.5",
+    "nodemon": "^1.18.3",
     "npm-audit": "0.0.3"
   },
   "scripts": {
     "start": "node ./socket_server/socket_server.js",
+    "dev-socket": "nodemon ./socket_server/socket_server.js --exec node_modules/.bin/babel-node --watch",
     "build": "babel ./socket_server/socket_server.js -d dist",
     "audit": "npm-audit",
     "postinstall": "npm-audit",

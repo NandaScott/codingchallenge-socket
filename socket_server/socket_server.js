@@ -18,7 +18,7 @@ const io = socketIo(server);
 io.on('connection', (socket) => {
 
     // INIT
-    axios.get('http://challengebackend.herokuapp.com/factory')
+    axios.get('https://challengebackend.herokuapp.com/factory')
         .then((response) => {
             socket.emit('FromAPI', response.data);
         })
@@ -28,9 +28,15 @@ io.on('connection', (socket) => {
 
 
     socket.on('renameFactory', (data) => {
-        axios.put(`http://challengebackend.herokuapp.com/factory/${data.factoryId}`, {'name': data.name})
-            .then((response) => {
-                io.emit('renamedFactory', response.data);
+        axios.put(`https://challengebackend.herokuapp.com/factory/${data.factoryId}`, {'name': data.name})
+            .then(() => {
+                axios.get('https://challengebackend.herokuapp.com/factory')
+                .then((response) => {
+                    io.emit('renamedFactory', response.data);
+                })
+                .catch((error) => {
+                    socket.emit('handleError', error.response.data);
+                });
             })
             .catch((error) => {
                 socket.emit('handleError', error.response.data);
@@ -39,15 +45,21 @@ io.on('connection', (socket) => {
 
 
     socket.on('generateNumbers', (data) => {
-        axios.put(`http://challengebackend.herokuapp.com/factory/${data.factoryId}`,
+        axios.put(`https://challengebackend.herokuapp.com/factory/${data.factoryId}`,
             {
                 'number_of_children': data.numberOfChildren,
                 'name': data.name,
                 'minimum': data.minimum,
                 'maximum': data.maximum
             })
-            .then((response) => {
-                io.emit('generatedNumbers', response.data);
+            .then(() => {
+                axios.get('https://challengebackend.herokuapp.com/factory')
+                    .then((response) => {
+                        io.emit('generatedNumbers', response.data);
+                    })
+                    .catch((error) => {
+                        socket.emit('handleError', error.response.data);
+                    });
             })
             .catch((error) => {
                 socket.emit('handleError', error.response.data);
@@ -56,12 +68,12 @@ io.on('connection', (socket) => {
 
 
     socket.on('deleteFactory', (data) => {
-        axios.delete(`http://challengebackend.herokuapp.com/factory/${data.factoryId}`)
+        axios.delete(`https://challengebackend.herokuapp.com/factory/${data.factoryId}`)
             .catch((error) => {
                 socket.emit('handleError', error.response.data);
             });
 
-        axios.get('http://challengebackend.herokuapp.com/factory')
+        axios.get('https://challengebackend.herokuapp.com/factory')
             .then((response) => {
                 io.emit('FromAPI', response.data);
             })
@@ -72,13 +84,13 @@ io.on('connection', (socket) => {
 
 
     socket.on('createFactory', (data) => {
-        axios.post('http://challengebackend.herokuapp.com/factory',
+        axios.post('https://challengebackend.herokuapp.com/factory',
             {'number_of_children': data.numberOfChildren, 'name': data.name})
             .catch((error) => {
                 socket.emit('handleError', error.response.data);
             });
 
-        axios.get('http://challengebackend.herokuapp.com/factory')
+        axios.get('https://challengebackend.herokuapp.com/factory')
             .then((response) => {
                 io.emit('FromAPI', response.data);
             })
